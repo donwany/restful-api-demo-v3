@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restapi
+  labels:
+    app: restapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restapi
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: restapi
+    spec:
+      containers:
+        - name: restapi
+          image: worldbosskafka/library-flask-app:v1.0.8
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: auth-configmap
+            - secretRef:
+                name: auth-secret
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-configmap
+data:
+  MONGODB_HOST: rest-api-demo.fml5mkt.mongodb.net
+  MONGODB_USERNAME: admin
+  DB: library
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: auth-secret
+stringData:
+  MONGODB_PASSWORD: elbowai
+  SECRET_KEY: '92406fed-2794-4ab2-b2e2-27b6220c52a5'
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restapi
+spec:
+  selector:
+    app: restapi
+  ports:
+  - name: http
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
