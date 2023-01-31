@@ -3,8 +3,14 @@
 curl --location --request POST '0.0.0.0:5000/api/v1.0/books' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "Introduction to Statistics",
-    "isbn": "202583438-ISBN-2023"
+    "name": "Return Trump 2024",
+    "isbn": "202583438-ISBN-2025",
+    "page": 5,
+    "author": "Donald Trump",
+    "Country": "USA",
+    "year_published": 2019,
+    "State": "NYC",
+    "Edition": 2
 }'
 ```
 ```shell
